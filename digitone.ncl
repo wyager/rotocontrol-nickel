@@ -1,4 +1,4 @@
-let colorSchemes = {
+let screenColorSchemes = {
   blackOnYellow = 17,
   whiteOnNavy = 64,
   blackOnOrange = 15,
@@ -24,12 +24,32 @@ let Knob = {
   stepNames | Len16 | default = std.array.generate (fun _ => "") 16
 }
 in
+let Button = {
+  controlIndex | doc "0-31" | Number,
+  controlMode = 0,
+  controlChannel | Number,
+  controlParam | Number,
+  nrprnAddress = 0,
+  minValue | default = 0,
+  maxValue | default = 127,
+  controlName | String,
+  colorScheme | Number,
+  ledOnColor | Number,
+  ledOffColor | Number,
+  hapticMode | Number = 1, # toggle
+  hapticSteps = 2,
+  stepNameOff | String | not_exported,
+  stepNameOn | String | not_exported,
+  stepNames = std.array.concat [stepNameOff, stepNameOn] (std.array.generate (fun _ => "") 14)
+}
+in
 let template = {
   version = 1,
   type = 'MIDI,
   name | String,
   index | Number = 0,
-  knobs | Array Knob
+  knobs | Array Knob,
+  buttons | Array Button
 }
 in
 let kick_knob | Knob = {
@@ -37,7 +57,7 @@ let kick_knob | Knob = {
   controlChannel | Number,
   controlParam = 81,
   controlName = "TK%{std.string.from_number controlChannel} OD",
-  colorScheme = colorSchemes.blackOnYellow,
+  colorScheme = screenColorSchemes.blackOnYellow,
   hapticMode = hapticModes.knob
 }
 in
@@ -46,7 +66,7 @@ let filter_knob | Knob = {
   controlChannel | Number,
   controlParam = 16,
   controlName = "TK%{std.string.from_number controlChannel} FILTFRQ",
-  colorScheme = colorSchemes.whiteOnNavy,
+  colorScheme = screenColorSchemes.whiteOnNavy,
   hapticMode = hapticModes.knob,
   minValue = 93
 }
@@ -56,7 +76,7 @@ let bitcrush_knob | Knob = {
   controlChannel | Number,
   controlParam = 78,
   controlName = "TK%{std.string.from_number controlChannel} BITCRUSH",
-  colorScheme = colorSchemes.blackOnOrange,
+  colorScheme = screenColorSchemes.blackOnOrange,
   hapticMode = hapticModes.knob,
 }
 in
@@ -65,7 +85,7 @@ let delay_knob | Knob = {
   controlChannel | Number,
   controlParam = 30,
   controlName = "TK%{std.string.from_number controlChannel} DELAY",
-  colorScheme = colorSchemes.blackOnBrown,
+  colorScheme = screenColorSchemes.blackOnBrown,
   hapticMode = hapticModes.knob,
 }
 in
@@ -89,5 +109,7 @@ template
     delay_knob & {controlChannel = 14},
     delay_knob & {controlChannel = 15},
     delay_knob & {controlChannel = 16},
+  ],
+  buttons = [
   ]
 }
