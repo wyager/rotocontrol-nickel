@@ -2,7 +2,13 @@ let screenColorSchemes = {
   blackOnYellow = 17,
   whiteOnNavy = 64,
   blackOnOrange = 15,
-  blackOnBrown = 16
+  blackOnBrown = 16,
+  whiteOnBlack = 70,
+}
+in
+let ledColors = {
+  black = 70,
+  purple = 75
 }
 in
 let hapticModes = { knob = 0 } in
@@ -52,6 +58,19 @@ let template = {
   buttons | Array Button
 }
 in
+let pat_mute | Button = {
+  controlIndex = controlChannel - 1,
+  controlChannel | Number,
+  controlParam = 110,
+  controlName = "TK%{std.string.from_number controlChannel} MUTE",
+  colorScheme = screenColorSchemes.whiteOnBlack,
+  ledOnColor = ledColors.black,
+  ledOffColor = ledColors.purple,
+  maxValue = 1,
+  stepNameOn = "MUTE",
+  stepNameOff = "PLAY"
+}
+in
 let kick_knob | Knob = {
   controlIndex = controlChannel - 1,
   controlChannel | Number,
@@ -97,19 +116,18 @@ template
     kick_knob & { controlChannel = 2 },
     kick_knob & { controlChannel = 3 },
     kick_knob & { controlChannel = 4 },
-    filter_knob & {controlChannel = 5},
-    filter_knob & {controlChannel = 6},
-    filter_knob & {controlChannel = 7},
-    filter_knob & {controlChannel = 8},
-    bitcrush_knob & {controlChannel = 9},
-    bitcrush_knob & {controlChannel = 10},
-    bitcrush_knob & {controlChannel = 11},
-    bitcrush_knob & {controlChannel = 12},
-    delay_knob & {controlChannel = 13},
-    delay_knob & {controlChannel = 14},
-    delay_knob & {controlChannel = 15},
-    delay_knob & {controlChannel = 16},
+    filter_knob & { controlChannel = 5 },
+    filter_knob & { controlChannel = 6 },
+    filter_knob & { controlChannel = 7 },
+    filter_knob & { controlChannel = 8 },
+    bitcrush_knob & { controlChannel = 9 },
+    bitcrush_knob & { controlChannel = 10 },
+    bitcrush_knob & { controlChannel = 11 },
+    bitcrush_knob & { controlChannel = 12 },
+    delay_knob & { controlChannel = 13 },
+    delay_knob & { controlChannel = 14 },
+    delay_knob & { controlChannel = 15 },
+    delay_knob & { controlChannel = 16 },
   ],
-  buttons = [
-  ]
+  buttons = std.array.generate (fun n => pat_mute & { controlChannel = (n + 1) }) 16
 }
