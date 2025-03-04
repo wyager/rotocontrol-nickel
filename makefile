@@ -1,4 +1,4 @@
 all: digitone
 
 digitone:
-	nickel export digitone.ncl > digitone.json
+	nickel export digitone2.ncl > digitone2.json
